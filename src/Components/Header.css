@@ -3,11 +3,11 @@ body, ul, li, dt, dd, dl {
     padding: 0px;
     font-family: 'Roboto', sans-serif;
     background: #f8f9fd;
+    margin:16px;
 }
 
 .header{
     margin: 0 0 1rem;
-    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;   
@@ -36,6 +36,8 @@ body, ul, li, dt, dd, dl {
     border-radius: 20px;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
     background-color: #dbff90;
+    cursor: pointer;
+    display: block;
 }
 
 .search i{
@@ -48,3 +50,4 @@ body, ul, li, dt, dd, dl {
 .fa-solid, .fas {
     padding-right: 0.5rem;
 }
+  

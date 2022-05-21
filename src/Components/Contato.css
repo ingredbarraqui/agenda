@@ -1,0 +1,52 @@
+.nome::before{
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background: #fb5;
+}
+
+.contato{
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.contato tr{
+    border: solid 1px #e1e1e1;
+    background-color: #ffffff;
+}
+
+.contato th{
+    background: #fff;
+    color: #9198af;
+    font-weight: normal;
+    font-size: 0.813rem;
+    padding: 1rem;
+    text-align: initial;
+    width: 30%;
+}
+
+.contato td{
+    margin: 0.063rem 1rem 0;
+    padding: 1rem;
+    border: #e1e1e1;
+    color: #2a2d3b;
+}
+
+.contatos{
+    text-align: center;
+}
+
+.itemContato:not(:first-child):hover {
+    background: #fff3f2;
+}
+
+.edit button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: -webkit-inline-box
+}
