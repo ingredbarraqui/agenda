@@ -1,16 +1,30 @@
 import React, {useState} from 'react'
 import styles from "./ModalForm.css"
+import InputMask from "react-input-mask";
 
 const ModalForm = (props) => {
-    
-    const padrao = { nome: "", email:"", tel:"" }
+
+    const padrao = { nome: "", email:"", tel:"", destaque: false }
     const [contato, setContato] = useState(props.editar != null ? props.editar :  padrao )
 
-    const [contatoNome, setContatoNome] = useState("")
-    const [contatoEmail, setContatoEmail] = useState("")
-    const [contatoTel, setContatoTel] = useState("")
+    const [contatoNome, setContatoNome] = useState(contato.nome)
+    const [contatoEmail, setContatoEmail] = useState(contato.email)
+    const [contatoTel, setContatoTel] = useState(contato.tel)
 
     const [ativo, setAtivo] = useState("disabled")
+
+    const handleAtivo = (e) => {
+
+        const nome = document.querySelector("#formEditar input[name=nome]").value;
+        const email = document.querySelector("#formEditar input[name=email]").value;
+        const tel = document.querySelector("#formEditar input[name=tel]").value;
+
+        if (nome == "" || email == "" || tel == "") {
+            setAtivo("disabled")
+        } else {
+            setAtivo("")
+        }
+    }
 
     const handleChange = (e) => {
         if (e.target.name == "nome")
@@ -19,20 +33,35 @@ const ModalForm = (props) => {
             setContatoEmail(e.target.value)
         else if (e.target.name == "tel")
             setContatoTel(e.target.value)
-        
-        if (contatoNome == "") {
-            setAtivo("disabled")
-        } else {
-            setAtivo("")
-        }
+        handleAtivo(e)
     }
-    
+
     const handleSubmit = (e, index) => {
-        e.preventDefault(); 
-        
+        e.preventDefault();
+
         const nome = e.target.elements.nome.value;
         const email = e.target.elements.email.value;
         const tel = e.target.elements.tel.value;
+        editarContato(nome, email, tel, props.editar)
+    }
+
+    const editarDestaque = (index, destaque) => {
+
+        let listaContatos = localStorage.getItem("listaContatos");
+
+        if (listaContatos == null) {
+            listaContatos = []
+        } else {
+           listaContatos = JSON.parse(listaContatos)
+        }
+
+        let contato = listaContatos[index];
+        contato.destaque = destaque;
+        listaContatos[index] = contato;
+        props.changeLista(listaContatos)
+    }
+
+    const editarContato = (nome, email, tel, editar = null, destaque = false) => {
         setContatoNome(nome);
         setContatoEmail(email);
         setContatoTel(tel);
@@ -51,24 +80,28 @@ const ModalForm = (props) => {
             tel: contatoTel || tel
         }
 
-        if (props.editar) {
-            listaContatos[props.editar.index] = contato
+        if (editar) {
+            contato.destaque = destaque;
+            listaContatos[editar.index] = contato;
         } else {
+            contato.destaque = true;
             listaContatos.push(contato)
+            setTimeout(() => {
+                editarDestaque((listaContatos.length - 1), false)
+            }, "10000")
         }
 
-        localStorage.setItem('listaContatos', JSON.stringify(listaContatos))
-        // props.onClose()
-        window.location.reload()
+        props.changeLista(listaContatos)
+        props.onClose()
     }
   return (
       <>
         <p>{props.titulo}</p>
-        <form onSubmit={handleSubmit}>
+        <form id="formEditar" onSubmit={handleSubmit}>
             <div className="form">
             <label>Nome
                 <input
-                    value={contatoNome === "" ? contato.nome : contatoNome}
+                    value={contatoNome}
                     type="text"
                     name='nome'
                     placeholder='nome'
@@ -78,7 +111,7 @@ const ModalForm = (props) => {
             </label>
             <label>E-mail
                   <input
-                    value={contatoEmail === "" ? contato.email : contatoEmail}
+                    value={contatoEmail}
                     type="email"
                     name='email'
                     placeholder='email'
@@ -87,15 +120,16 @@ const ModalForm = (props) => {
                   />
             </label>
             <label>Telefone
-                  <input
-                    value={contatoTel === "" ? contato.tel : contatoTel}
+                  <InputMask
+                    value={contatoTel}
                     type="tel"
                     name='tel'
+                    mask="(99) 99999-9999"
                     placeholder='Telefone'
                     required
                     onChange={handleChange}
                   />
-              </label>  
+              </label>
             </div>
             <div className="btns-modal">
                 <button className="cancelar" onClick={props.onClose}>Cancelar</button>
@@ -105,5 +139,4 @@ const ModalForm = (props) => {
     </>
   )
 }
-
 export default ModalForm
